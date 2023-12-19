@@ -55,6 +55,38 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  apiCalls      Int       @default(0)
+  isPro         Boolean   @default(false)
+  isAdmin       Boolean   @default(false)
+
   accounts      Account[]
   sessions      Session[]
+  geners        Gener[]
+  favorites     Favorites[]
+}
+
+model Gener {
+  id          String   @id @default(cuid())
+  code       String
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  favorites   Favorites[]
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Favorites {
+  id          String   @id @default(cuid())
+  
+  generId    String
+  gener      Gener    @relation(fields: [generId], references: [id], onDelete: Cascade)
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
